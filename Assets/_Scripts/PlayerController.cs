@@ -9,12 +9,14 @@ public class PlayerController : MonoBehaviour {
     public AudioSource Eating;
     public Transform PlayerCam;
 
-    //PRIVATE VARIABLES
-    
-    //private Transform _transform;
+    //PRIVATE VARIABLES    
+    private Transform _transform;
+    private Transform _playerSpawnPoint;
 	// Use this for initialization
 	void Start () {
         this.PlayerCam = this.GetComponent<Transform>();
+        this._transform = this.GetComponent<Transform>();
+        this._playerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint").transform;
 	}
 	
 	// FixedUpdate is called once per frame
@@ -30,24 +32,35 @@ public class PlayerController : MonoBehaviour {
 
             if(Physics.Raycast (this.PlayerCam.position,this.PlayerCam.forward,out hit))
             {
-                Debug.Log(hit.transform.gameObject);
+                if (hit.transform.gameObject.CompareTag("Enemy")) {
+                    hit.transform.gameObject.SetActive(false);
+                    Debug.Log("BULLET HIT");
+                    // DO ANYTHING ELSE
+                }
+                Debug.Log(hit.transform.gameObject.ToString() + " - " + hit.transform.gameObject.tag + " - " + hit.collider.tag);
             }
-
 
             //Play rifle sound
             this.MachineGunSound.Play();
         }
 
+
+        //CHECK IF THEY FELL!
+        if (this._transform.position.y <= 21f) {
+            this._transform.position = this._playerSpawnPoint.position;
+        }
 	}
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-   
+    {   
         if (hit.gameObject.CompareTag("Food"))
         {
             Eating.Play();
             Debug.Log("Food !!");
             Destroy(hit.gameObject);
+        } else if(hit.gameObject.CompareTag("Enemy")) {
+            Debug.Log("Enemy hit");
+            // DO SOMETHING ELSE
         }
     }
 }
