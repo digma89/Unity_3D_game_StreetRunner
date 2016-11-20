@@ -9,7 +9,7 @@ public class EnemyScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         this.Player = GameObject.FindWithTag("Player").transform;
-        this.GetComponent<Animator>().speed = 2;
+        this.GetComponent<Animator>().speed = 4;
 	}
 	
 	// Update is called once per frame

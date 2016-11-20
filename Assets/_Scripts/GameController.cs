@@ -28,6 +28,7 @@ public class GameController : MonoBehaviour
 
     private GameObject[] _spawns;
     private List<GameObject> _enemies = new List<GameObject>();
+    private int _currentSpawnIndex = 0;
     
     // PUBLIC PROPERTIES +++++++++++++++++++++++++++
     public int LivesValue
@@ -73,7 +74,7 @@ public class GameController : MonoBehaviour
         _spawns = GameObject.FindGameObjectsWithTag("SpawnPoint");
         for (int i = 0; i < numEnemies; i++)
         {
-            GameObject spwn = _spawns[Random.Range(0, _spawns.Length - 1)];
+            GameObject spwn = _spawns[this.GetRespawnIndex()];
             GameObject en = Instantiate(Enemy, spwn.transform.position, Quaternion.identity) as GameObject;
             _enemies.Add(en);
         }
@@ -92,16 +93,27 @@ public class GameController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.KeypadEnter) && _gameOver) {
             RestartButton_Click();
-                }
+        }
+
         for (int i = 0; i < numEnemies; i++)
         {
             if (_enemies[i].gameObject.activeInHierarchy == false)
             {
-                GameObject spwn = _spawns[Random.Range(0, _spawns.Length - 1)];
+                GameObject spwn = _spawns[this.GetRespawnIndex()];
                 _enemies[i].transform.position = spwn.transform.position;
                 _enemies[i].SetActive(true);
             }
         }
+    }
+
+    private int GetRespawnIndex() {
+        int numSpawns = this._spawns.Length;
+        if (this._currentSpawnIndex == numSpawns - 1) {
+            this._currentSpawnIndex = 0;
+        }
+        int _ret = this._currentSpawnIndex;
+        this._currentSpawnIndex++;
+        return _ret;
     }
 
     private void _endGame()

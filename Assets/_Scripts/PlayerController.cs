@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
     public AudioSource Eating;
     public AudioSource getHit;
     public AudioSource HitZombi;
+    public AudioSource PlayerDrown;
     public Transform PlayerCam;
 
     //PRIVATE VARIABLES    
@@ -50,11 +51,10 @@ public class PlayerController : MonoBehaviour {
             this.MachineGunSound.Play();
         }
 
-
         //CHECK IF THEY FELL!
         if (this._transform.position.y <= 21f) {
-            this._gameController.LivesValue -= 5;
-            this._transform.position = this._playerSpawnPoint.position;
+            this.PlayerDrown.Play();
+            this.ResetPlayer();
         }
 	}
 
@@ -68,8 +68,13 @@ public class PlayerController : MonoBehaviour {
             Destroy(hit.gameObject);
         } else if(hit.gameObject.CompareTag("Enemy")) {
             Debug.Log("Enemy hit");            
-            getHit.Play();            
-            this._gameController.LivesValue -= 1;
+            getHit.Play();
+            this.ResetPlayer();
         }
+    }
+
+    private void ResetPlayer() {
+        this._gameController.LivesValue -= 1;
+        this._transform.position = this._playerSpawnPoint.position;
     }
 }
