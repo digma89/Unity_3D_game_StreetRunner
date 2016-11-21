@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour {
     public Transform PlayerCam;
 
     //PRIVATE VARIABLES    
+    private int enemyHit = 0;
     private Transform _transform;
     private Transform _playerSpawnPoint;
     private GameController _gameController;
@@ -39,10 +40,15 @@ public class PlayerController : MonoBehaviour {
             if(Physics.Raycast (this.PlayerCam.position,this.PlayerCam.forward,out hit))
             {
                 if (hit.transform.gameObject.CompareTag("Enemy")) {
+                    enemyHit++;
+                    if(enemyHit >= 20) { 
                     hit.transform.gameObject.SetActive(false);
+                        this._gameController.ScoreValue += 100;
+                        enemyHit = 0;
+                    }
                     Debug.Log("BULLET HIT");
                     HitZombi.Play();
-                    this._gameController.ScoreValue += 100;
+                    
                 }
                 Debug.Log(hit.transform.gameObject.ToString() + " - " + hit.transform.gameObject.tag + " - " + hit.collider.tag);
             }
@@ -73,7 +79,9 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    private void ResetPlayer() {
+   
+
+    public void ResetPlayer() {
         this._gameController.LivesValue -= 1;
         this._transform.position = this._playerSpawnPoint.position;
     }

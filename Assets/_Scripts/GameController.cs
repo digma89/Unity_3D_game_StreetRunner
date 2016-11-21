@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
 {
 
     // PRIVATE INSTANCE VARIABLES ++++++++++++++++++
+    private float time = 50;
     private int _livesValue;
     private int _scoreValue;
     private bool _gameOver = false;
@@ -22,9 +23,7 @@ public class GameController : MonoBehaviour
     public Text ScoreLabel;
     public Text GameOverLabel;
     public Text FinalScoreLabel;
-    public Text youWon;
     public Button RestartButton;
-    public GameObject Hero;
 
     private GameObject[] _spawns;
     private List<GameObject> _enemies = new List<GameObject>();
@@ -91,8 +90,12 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.KeypadEnter) && _gameOver) {
-            RestartButton_Click();
+        
+        time -= Time.deltaTime;
+        if (time <= 0 && _gameOver) {
+            Debug.Log("timer!!");
+            time = 0;
+            SceneManager.LoadScene("Main");
         }
 
         for (int i = 0; i < numEnemies; i++)
@@ -117,16 +120,15 @@ public class GameController : MonoBehaviour
     }
 
     private void _endGame()
-    {
-        _gameOver = true;
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        this.GameOverLabel.gameObject.SetActive(true);
-        this.FinalScoreLabel.text = "Final Score: " + this.ScoreValue;
-        this.FinalScoreLabel.gameObject.SetActive(true);
-        this.RestartButton.gameObject.SetActive(true);
-        this.Hero.SetActive(false);
-        GameObject.Find("Player").GetComponent<FirstPersonController>().enabled = false;
+    {       
+           _gameOver = true;
+           Cursor.lockState = CursorLockMode.None;
+           Cursor.visible = true;
+           this.GameOverLabel.gameObject.SetActive(true);
+           this.FinalScoreLabel.text = "Final Score: " + this.ScoreValue;
+           this.FinalScoreLabel.gameObject.SetActive(true);
+           this.RestartButton.gameObject.SetActive(true);
+           GameObject.Find("Player").GetComponent<FirstPersonController>().enabled = false;
     }
 
 
