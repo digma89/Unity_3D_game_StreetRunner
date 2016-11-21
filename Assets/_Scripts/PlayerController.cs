@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour {
             {
                 if (hit.transform.gameObject.CompareTag("Enemy")) {
                     enemyHit++;
-                    if(enemyHit >= 20) { 
+                    if(enemyHit >= 10) { 
                     hit.transform.gameObject.SetActive(false);
                         this._gameController.ScoreValue += 100;
                         enemyHit = 0;
@@ -72,14 +72,16 @@ public class PlayerController : MonoBehaviour {
             Debug.Log("Food !!");
             this._gameController.LivesValue += 1;
             Destroy(hit.gameObject);
-        } else if(hit.gameObject.CompareTag("Enemy")) {
-            Debug.Log("Enemy hit");            
+        }
+    }
+
+    private void OnTriggerEnter(Collider col) {
+        if (col.gameObject.CompareTag("Enemy")) {
+            Debug.Log("Enemy hit");
             getHit.Play();
             this.ResetPlayer();
         }
     }
-
-   
 
     public void ResetPlayer() {
         this._gameController.LivesValue -= 1;
